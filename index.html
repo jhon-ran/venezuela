@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ayuda Venezuela Verificada · Terremoto 2026</title>
+<meta name="description" content="Directorio independiente de organizaciones de ayuda para el terremoto en Venezuela, revisadas por fuentes confiables. Dona con confianza y evita estafas.">
+
+<script async src="https://tally.so/widgets/embed.js"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================================================
+     DESIGN TOKENS
+     ============================================================ */
+  :root{
+    --paper:#F5F6F4;
+    --card:#FFFFFF;
+    --ink:#16222E;
+    --muted:#54606B;
+    --line:#E3E6E2;
+    --verified:#1F7A5C;       /* trust green */
+    --verified-bg:#E8F2EC;
+    --accent:#E0A23A;         /* muted Venezuelan amber */
+    --warn-bg:#FBEFD6;
+    --warn-ink:#7A5A18;
+    --pending:#9A6B12;
+    --pending-bg:#FBF3E0;
+    --shadow:0 1px 2px rgba(22,34,46,.05), 0 8px 24px rgba(22,34,46,.06);
+    --radius:14px;
+    --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+    --body:"Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--body);
+    line-height:1.55;
+    font-size:16px;
+  }
+  a{color:inherit;}
+  img,svg{max-width:100%;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 clamp(16px,5vw,22px);}
+
+  /* ============================================================
+     HEADER
+     ============================================================ */
+  .top{padding:clamp(26px,6vw,38px) 0 22px;position:relative;}
+  .brandrow{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;}
+  .mark{
+    font-family:var(--display);
+    font-weight:800;
+    font-size:clamp(26px,7vw,42px);
+    letter-spacing:-.02em;
+    line-height:1.05;
+    margin:0;
+  }
+  .mark .pin{color:var(--accent);}
+  .seismic{
+    display:block;width:100%;height:18px;margin-top:14px;
+    opacity:.55;
+  }
+  .lede{
+    margin:14px 0 0;
+    max-width:60ch;
+    font-size:clamp(15.5px,2.2vw,18px);
+    color:var(--muted);
+  }
+  .lede strong{color:var(--ink);font-weight:600;}
+  .meta{
+    margin-top:16px;
+    display:flex;gap:14px 18px;flex-wrap:wrap;
+    font-size:13px;color:var(--muted);
+  }
+  .meta span{display:inline-flex;align-items:center;gap:7px;}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--verified);display:inline-block;flex:none;}
+
+  /* ============================================================
+     SCAM WARNING
+     ============================================================ */
+  .warn{
+    background:var(--warn-bg);
+    border:1px solid #F1DFB4;
+    border-radius:var(--radius);
+    padding:16px 18px;
+    margin:8px 0 28px;
+    display:flex;gap:14px;align-items:flex-start;
+    color:var(--warn-ink);
+    font-size:14.5px;
+  }
+  .warn svg{flex:none;margin-top:1px;}
+  .warn b{color:#5e440f;}
+
+  /* ============================================================
+     HOW WE VERIFY
+     ============================================================ */
+  .verify-strip{
+    border:1px solid var(--line);
+    background:var(--card);
+    border-radius:var(--radius);
+    padding:20px 22px;
+    margin-bottom:30px;
+    box-shadow:var(--shadow);
+  }
+  .verify-strip h2{
+    font-family:var(--display);font-weight:700;
+    font-size:16px;margin:0 0 10px;letter-spacing:-.01em;
+    display:flex;align-items:center;gap:9px;
+  }
+  .verify-strip ol{margin:0;padding-left:0;list-style:none;display:grid;gap:9px;}
+  .verify-strip li{
+    display:flex;gap:11px;align-items:flex-start;
+    font-size:14px;color:var(--muted);
+  }
+  .vnum{
+    flex:none;width:21px;height:21px;border-radius:6px;
+    background:var(--verified-bg);color:var(--verified);
+    font-weight:600;font-size:12px;
+    display:grid;place-items:center;margin-top:1px;
+  }
+
+  /* ============================================================
+     FILTERS
+     ============================================================ */
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;}
+  .chip{
+    font-family:var(--body);font-size:13.5px;font-weight:500;
+    border:1px solid var(--line);background:var(--card);color:var(--muted);
+    padding:9px 15px;min-height:40px;border-radius:999px;cursor:pointer;
+    transition:background .15s,color .15s,border-color .15s;
+  }
+  .chip:hover{border-color:#C9CEC8;}
+  .chip[aria-pressed="true"]{
+    background:var(--ink);color:#fff;border-color:var(--ink);
+  }
+  .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+
+  /* ============================================================
+     CARD GRID
+     ============================================================ */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(min(312px,100%),1fr));
+    gap:18px;
+    margin-bottom:48px;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px 20px 18px;
+    box-shadow:var(--shadow);
+    display:flex;flex-direction:column;
+    min-width:0;
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  @media (hover:hover) and (pointer:fine){
+    .card:hover{transform:translateY(-2px);box-shadow:0 2px 4px rgba(22,34,46,.06),0 16px 36px rgba(22,34,46,.10);}
+  }
+
+  /* provenance line — the signature element */
+  .prov{
+    display:inline-flex;align-items:center;gap:7px;
+    font-size:12px;font-weight:500;
+    padding:5px 10px 5px 8px;border-radius:999px;
+    align-self:flex-start;margin-bottom:13px;
+  }
+  .prov.ok{background:var(--verified-bg);color:var(--verified);}
+  .prov.pend{background:var(--pending-bg);color:var(--pending);}
+  .prov svg{flex:none;}
+  .prov a{font-weight:600;text-decoration:underline;text-underline-offset:2px;}
+
+  .card h3{
+    font-family:var(--display);font-weight:700;
+    font-size:19px;letter-spacing:-.01em;margin:0 0 6px;
+  }
+  .desc{font-size:14px;color:var(--muted);margin:0 0 14px;flex:1;}
+
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+  .tag{
+    font-size:11.5px;font-weight:500;letter-spacing:.02em;
+    color:var(--muted);background:var(--paper);
+    border:1px solid var(--line);border-radius:6px;padding:3px 8px;
+  }
+
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    font-family:var(--body);font-weight:600;font-size:14.5px;
+    padding:11px 16px;border-radius:10px;text-decoration:none;
+    transition:background .15s,opacity .15s,transform .05s;
+  }
+  .btn:active{transform:translateY(1px);}
+  .btn-go{background:var(--ink);color:#fff;}
+  .btn-go:hover{background:#0e1a25;}
+  .btn-confirm{background:transparent;color:var(--pending);border:1px solid #E6CF9C;}
+  .btn-confirm:hover{background:var(--pending-bg);}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+
+  .empty{
+    grid-column:1/-1;text-align:center;color:var(--muted);
+    padding:40px 20px;font-size:15px;
+  }
+
+  /* ============================================================
+     SUGGEST / FEEDBACK
+     ============================================================ */
+  .suggest{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-left:4px solid var(--verified);
+    border-radius:var(--radius);
+    padding:22px 24px;
+    margin:0 0 46px;
+    box-shadow:var(--shadow);
+    display:flex;flex-wrap:wrap;align-items:center;gap:18px 28px;
+    justify-content:space-between;
+  }
+  .suggest-txt{flex:1 1 320px;}
+  .suggest-txt h2{
+    font-family:var(--display);font-weight:700;
+    font-size:18px;letter-spacing:-.01em;margin:0 0 6px;
+  }
+  .suggest-txt p{margin:0;font-size:14px;color:var(--muted);max-width:54ch;}
+  .suggest-txt .hint{margin-top:8px;font-size:12.5px;color:var(--verified);font-weight:500;}
+  .suggest .btn-go{flex:none;}
+
+  /* ============================================================
+     FOOTER
+     ============================================================ */
+  .foot{
+    border-top:1px solid var(--line);
+    padding:28px 0 60px;
+    font-size:13px;color:var(--muted);
+  }
+  .foot p{margin:0 0 12px;max-width:72ch;}
+  .foot strong{color:var(--ink);font-weight:600;}
+  .foot a{color:var(--verified);text-decoration:underline;text-underline-offset:2px;}
+  .srcs{display:flex;gap:8px 18px;flex-wrap:wrap;margin-top:6px;}
+
+  /* ============================================================
+     MOTION / A11Y
+     ============================================================ */
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important;transition:none !important;}
+  }
+  @keyframes rise{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+  .card{animation:rise .4s ease both;}
+
+  /* ============================================================
+     MOBILE — structural adjustments, not just scaling
+     ============================================================ */
+  @media (max-width:560px){
+    .grid{gap:14px;}
+    .card{padding:18px 16px 16px;}
+    .verify-strip{padding:18px 16px;}
+    .warn{padding:14px 15px;flex-direction:row;}
+    .btn{width:100%;}
+    .suggest{
+      flex-direction:column;align-items:stretch;
+      padding:20px 18px;
+    }
+    .suggest .btn-go{width:100%;}
+    .meta{font-size:12.5px;gap:10px 14px;}
+    .foot{padding:24px 0 48px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ============== HEADER ============== -->
+  <header class="top">
+    <div class="brandrow">
+      <h1 class="mark">Ayuda Venezuela <span class="pin">Verificada</span></h1>
+    </div>
+    <svg class="seismic" viewBox="0 0 600 18" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 9 H210 L222 2 L234 16 L246 4 L258 9 H600" fill="none" stroke="#C9CEC8" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <p class="lede">
+      Un directorio independiente de organizaciones que están atendiendo el terremoto del 24 de junio,
+      <strong>revisadas por fuentes confiables</strong>. Pensado para venezolanos en el exterior
+      y donantes que quieren ayudar sin caer en estafas.
+    </p>
+    <div class="meta">
+      <span><span class="dot"></span> Solo organizaciones verificadas</span>
+      <span id="count">— organizaciones</span>
+      <span>Actualizado: 26 de junio de 2026</span>
+    </div>
+  </header>
+
+  <!-- ============== SCAM WARNING ============== -->
+  <div class="warn" role="note">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 3 2.5 20h19L12 3Z" stroke="#B07E1E" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M12 10v4.5M12 17.2v.1" stroke="#B07E1E" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+    <div>
+      <b>Cuidado con las estafas.</b> Tras el terremoto han aparecido campañas falsas, recaudaciones
+      fraudulentas y apelaciones generadas con IA. Aquí solo aparecen organizaciones avaladas por
+      fuentes confiables — aun así, <b>confirma siempre el sitio oficial</b> antes de aportar y
+      desconfía de enlaces que llegan por mensajes no solicitados.
+    </div>
+  </div>
+
+  <!-- ============== HOW WE VERIFY ============== -->
+  <section class="verify-strip" aria-labelledby="vt">
+    <h2 id="vt">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 2.5 4 5.5v6c0 5 3.4 8.4 8 10 4.6-1.6 8-5 8-10v-6L12 2.5Z" stroke="#1F7A5C" stroke-width="1.6" stroke-linejoin="round"/>
+        <path d="m8.7 12 2.3 2.3L15.6 9.6" stroke="#1F7A5C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Cómo elegimos las organizaciones
+    </h2>
+    <ol>
+      <li><span class="vnum">1</span> Aparecen en fuentes oficiales o reconocidas (gobiernos, plataformas y calificadoras de confianza), no en redes sociales sueltas.</li>
+      <li><span class="vnum">2</span> Tienen trayectoria comprobable en respuesta a desastres.</li>
+      <li><span class="vnum">3</span> Enlazan a su propia página oficial de donación. No recibimos ni intermediamos dinero.</li>
+    </ol>
+  </section>
+
+  <!-- ============== FILTERS ============== -->
+  <div class="filters" id="filters" role="group" aria-label="Filtrar por tipo de ayuda"></div>
+
+  <!-- ============== GRID ============== -->
+  <main class="grid" id="grid"></main>
+
+  <!-- ============== SUGGEST / FEEDBACK ============== -->
+  <!--
+       Reemplaza TU_ENLACE_DEL_FORMULARIO por la URL de tu Google Form.
+       Las sugerencias caen en la hoja de respuestas y las revisas TÚ
+       antes de agregarlas. Nada se publica de forma automática.
+  -->
+  <section class="suggest">
+    <div class="suggest-txt">
+      <h2>¿Conoces otra fuente verificada? ¿Viste un error?</h2>
+      <p>
+        Este directorio crece con cuidado. Sugiere una organización o reporta un enlace
+        incorrecto o una posible estafa. Revisamos cada aporte antes de publicarlo —
+        nada se agrega automáticamente.
+      </p>
+      <p class="hint">Incluye el enlace oficial y qué fuente confiable la avala.</p>
+    </div>
+    <a class="btn btn-go" href="#tally-open=EkgW0A&tally-emoji-text=👋&tally-emoji-animation=wave" target="_blank" rel="noopener noreferrer">
+      Sugerir o reportar
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </section>
+
+  <!-- ============== FOOTER ============== -->
+  <footer class="foot">
+    <p>
+      <strong>Este es un directorio independiente y sin fines de lucro.</strong> No estamos afiliados
+      a ninguna organización listada, no recibimos donaciones y no cobramos comisiones. Las descripciones
+      son orientativas; la información oficial siempre está en el sitio de cada organización.
+    </p>
+    <p>
+      Recomendamos donar a través de organizaciones internacionales establecidas, que operan por canales
+      legales. Si detectas un enlace incorrecto o una posible estafa, por favor avísanos.
+      <em>(Agrega aquí tu correo o formulario de contacto.)</em>
+    </p>
+    <p>
+      <strong>Fuentes de verificación:</strong>
+    </p>
+    <div class="srcs">
+      <a href="https://www.state.gov/responding-to-venezuela-earthquakes" target="_blank" rel="noopener noreferrer">Depto. de Estado de EE.UU.</a>
+      <a href="https://www.globalgiving.org/projects/venezuela-earthquake-relief-fund/" target="_blank" rel="noopener noreferrer">GlobalGiving</a>
+      <a href="https://teamrubiconusa.org/news-and-stories/how-to-help-venezuela-earthquake-survivors/" target="_blank" rel="noopener noreferrer">Team Rubicon</a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+/* ================================================================
+   ⚠️  ANTES DE PUBLICAR — LEER ESTO
+   ----------------------------------------------------------------
+   Cada organización tiene un campo "verified":
+     • true   → el enlace de donación está confirmado contra una
+                fuente que sí revisé. Igual conviene abrirlo una vez.
+     • false  → NO tengo el enlace oficial de donación directo.
+                La tarjeta muestra el botón "Confirmar enlace oficial",
+                que lleva a la fuente que avala a la organización.
+                TÚ debes:
+                  1. abrir esa fuente,
+                  2. copiar el enlace OFICIAL de donación de la org,
+                  3. pegarlo en "donateUrl",
+                  4. cambiar "verified" a true.
+
+   Para agregar una organización: copia un bloque {...} y complétalo.
+   Para quitarla: borra su bloque. Nada más que tocar.
+   ================================================================ */
+
+const ORGS = [
+  {
+    name: "GlobalGiving — Fondo de Ayuda Venezuela",
+    desc: "Canaliza donaciones a organizaciones locales venezolanas para atención médica, rescate, refugio, agua y alimentos.",
+    tags: ["Fondo local", "General"],
+    vettedBy: { label: "GlobalGiving", url: "https://www.globalgiving.org/projects/venezuela-earthquake-relief-fund/" },
+    donateUrl: "https://www.globalgiving.org/projects/venezuela-earthquake-relief-fund/",
+    verified: true
+  },
+  {
+    name: "International Rescue Committee (IRC)",
+    desc: "Equipos en el terreno entregando salud, nutrición, agua, protección y apoyo a familias desplazadas.",
+    tags: ["General", "Médica"],
+    vettedBy: { label: "Calificadoras de confianza", url: "https://www.rescue.org/article/how-help-survivors-earthquakes-venezuela" },
+    donateUrl: "https://www.rescue.org/article/how-help-survivors-earthquakes-venezuela",
+    verified: true
+  },
+  {
+    name: "Direct Relief",
+    desc: "Envía suministros y medicamentos a hospitales y centros de salud afectados por el terremoto.",
+    tags: ["Médica"],
+    vettedBy: { label: "Respuesta médica documentada", url: "https://www.directrelief.org/2026/06/venezuela-earthquake-caracas-damage/" },
+    donateUrl: "https://www.directrelief.org/2026/06/venezuela-earthquake-caracas-damage/",
+    verified: true
+  },
+  {
+    name: "Team Rubicon",
+    desc: "Equipos médicos y de búsqueda y rescate desplegados en la zona del desastre.",
+    tags: ["Rescate", "Médica"],
+    vettedBy: { label: "Team Rubicon", url: "https://teamrubiconusa.org/news-and-stories/how-to-help-venezuela-earthquake-survivors/" },
+    donateUrl: "https://teamrubiconusa.org/news-and-stories/how-to-help-venezuela-earthquake-survivors/",
+    verified: true
+  },
+  {
+    name: "Malteser International",
+    desc: "Ayuda de emergencia: refugio, agua potable y atención básica para las comunidades afectadas.",
+    tags: ["General", "Refugio"],
+    vettedBy: { label: "Malteser International", url: "https://www.malteser-international.org/en/our-work/americas/earthquakes-in-venezuela-your-donation-helps.html" },
+    donateUrl: "https://www.malteser-international.org/en/our-work/americas/earthquakes-in-venezuela-your-donation-helps.html",
+    verified: true
+  },
+  {
+    name: "Catholic Relief Services (CRS)",
+    desc: "Respuesta humanitaria de emergencia. Socia oficial de la respuesta coordinada de EE.UU.",
+    tags: ["General"],
+    vettedBy: { label: "Depto. de Estado de EE.UU.", url: "https://www.state.gov/responding-to-venezuela-earthquakes" },
+    donateUrl: null,
+    verified: false
+  },
+  {
+    name: "Samaritan's Purse",
+    desc: "Despliegue de ayuda de emergencia. Socia oficial de la respuesta coordinada de EE.UU.",
+    tags: ["General", "Médica"],
+    vettedBy: { label: "Depto. de Estado de EE.UU.", url: "https://www.state.gov/responding-to-venezuela-earthquakes" },
+    donateUrl: null,
+    verified: false
+  },
+  {
+    name: "World Vision",
+    desc: "Ayuda enfocada en la protección de niñas, niños y familias desplazadas.",
+    tags: ["Niñez", "Refugio"],
+    vettedBy: { label: "Depto. de Estado de EE.UU.", url: "https://www.state.gov/responding-to-venezuela-earthquakes" },
+    donateUrl: null,
+    verified: false
+  },
+  {
+    name: "World Central Kitchen",
+    desc: "Comidas calientes para familias que perdieron su hogar y viven en refugios temporales.",
+    tags: ["Comida"],
+    vettedBy: { label: "Team Rubicon (orgs en el terreno)", url: "https://teamrubiconusa.org/news-and-stories/how-to-help-venezuela-earthquake-survivors/" },
+    donateUrl: null,
+    verified: false
+  },
+  {
+    name: "Cruz Roja Venezolana",
+    desc: "Cruz Roja local atendiendo heridos y damnificados directamente en el terreno.",
+    tags: ["Local", "Médica"],
+    vettedBy: { label: "Team Rubicon (orgs en el terreno)", url: "https://teamrubiconusa.org/news-and-stories/how-to-help-venezuela-earthquake-survivors/" },
+    donateUrl: null,
+    verified: false
+  }
+];
+
+/* ---- icons ---- */
+const shieldOk = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2.5 4 5.5v6c0 5 3.4 8.4 8 10 4.6-1.6 8-5 8-10v-6L12 2.5Z" stroke="#1F7A5C" stroke-width="1.7" stroke-linejoin="round"/><path d="m8.7 12 2.3 2.3L15.6 9.6" stroke="#1F7A5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const clockPend = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="#9A6B12" stroke-width="1.7"/><path d="M12 7.5V12l3 2" stroke="#9A6B12" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const arrow = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---- render ---- */
+const grid = document.getElementById('grid');
+let activeFilter = "Todo";
+
+function cardHTML(o){
+  const prov = o.verified
+    ? `<span class="prov ok">${shieldOk} Verificado por <a href="${esc(o.vettedBy.url)}" target="_blank" rel="noopener noreferrer">${esc(o.vettedBy.label)}</a></span>`
+    : `<span class="prov pend">${clockPend} Avalada por <a href="${esc(o.vettedBy.url)}" target="_blank" rel="noopener noreferrer">${esc(o.vettedBy.label)}</a></span>`;
+
+  const btn = (o.verified && o.donateUrl)
+    ? `<a class="btn btn-go" href="${esc(o.donateUrl)}" target="_blank" rel="noopener noreferrer">Donar ${arrow}</a>`
+    : `<a class="btn btn-confirm" href="${esc(o.vettedBy.url)}" target="_blank" rel="noopener noreferrer">Confirmar enlace oficial ${arrow}</a>`;
+
+  const tags = o.tags.map(t => `<span class="tag">${esc(t)}</span>`).join('');
+
+  return `<article class="card">
+    ${prov}
+    <h3>${esc(o.name)}</h3>
+    <p class="desc">${esc(o.desc)}</p>
+    <div class="tags">${tags}</div>
+    ${btn}
+  </article>`;
+}
+
+function render(){
+  const list = activeFilter === "Todo"
+    ? ORGS
+    : ORGS.filter(o => o.tags.includes(activeFilter));
+
+  grid.innerHTML = list.length
+    ? list.map(cardHTML).join('')
+    : `<p class="empty">No hay organizaciones para este filtro todavía.</p>`;
+
+  document.getElementById('count').textContent = `${ORGS.length} organizaciones`;
+}
+
+/* ---- filters ---- */
+function buildFilters(){
+  const all = ["Todo", ...new Set(ORGS.flatMap(o => o.tags))];
+  const box = document.getElementById('filters');
+  box.innerHTML = all.map(f =>
+    `<button class="chip" data-f="${esc(f)}" aria-pressed="${f===activeFilter}">${esc(f)}</button>`
+  ).join('');
+  box.addEventListener('click', e => {
+    const b = e.target.closest('.chip');
+    if(!b) return;
+    activeFilter = b.dataset.f;
+    box.querySelectorAll('.chip').forEach(c =>
+      c.setAttribute('aria-pressed', c.dataset.f === activeFilter));
+    render();
+  });
+}
+
+buildFilters();
+render();
+</script>
+</body>
+</html>
